@@ -1,74 +1,26 @@
-window.requestAnimFrame = (function(){
-    return  window.requestAnimationFrame       ||
-        window.webkitRequestAnimationFrame ||
-        window.mozRequestAnimationFrame    ||
-        function( callback ){
-            window.setTimeout(callback, 1000 / 60);
-        };
-})();
+// Author: Thomas Davis <thomasalwyndavis@gmail.com>
+// Filename: main.js
 
-var canvas, context;
-var width = window.innerWidth;
-var height = window.innerHeight;
+// Require.js allows us to configure shortcut alias
+// Their usage will become more apparent futher along in the tutorial.
+require.config({
+    paths: {
+        jquery: 'libs/jquery/jquery-min',
+        underscore: 'libs/underscore/underscore-min',
+        backbone: 'libs/backbone/backbone-min',
+        templates: '../templates',
+        mout: 'libs/mout'
 
-var stats = new Stats();
-stats.setMode(0); // 0: fps, 1: ms
-
-// Align top-left
-stats.domElement.style.position = 'absolute';
-stats.domElement.style.left = '0px';
-stats.domElement.style.top = '0px';
-document.body.appendChild( stats.domElement );
-
-// get the canvas from DOM
-canvas = document.getElementById("myCanvas");
-canvas.width = width;
-canvas.height = height;
-
-context = canvas.getContext("2d");
-
-// example
-
-var posx = 0
-var posy = height/2;
-
-loop();
-
-function loop(){
-    stats.begin();
-
-    posx += 10;
-
-    context.clearRect(0, 0, width, height);
-
-    context.beginPath();
-    context.fillStyle = "#ff0000";
-    context.arc( posx, posy, 10, 0, 2*Math.PI, false);
-    context.fill();
-    context.closePath();
-
-    stats.end();
-
-    if(posx > width + 10){
-        posx = -10;
     }
 
-    requestAnimFrame(loop);
-}
+});
 
+require([
+    // Load our app module and pass it to our definition function
+    'app'
 
-// resize the window
-$(window).resize(function(){
-
-    context.clearRect(0, 0, width, height);
-
-    width = window.innerWidth;
-    height = window.innerHeight;
-
-    canvas.width = width;
-    canvas.height = height;
-
-
-
-    posy = height/2;
+], function(App){
+    // The "app" dependency is passed in as "App"
+    // Again, the other dependencies passed in are not "AMD" therefore don't pass a parameter to this function
+    App.initialize();
 });
