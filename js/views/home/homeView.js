@@ -55,7 +55,15 @@ define([
 
             this.start();
 
-            /** **/
+            /** variables related to the mouse **/
+            this.curMousePostion = {};
+            this.prevMousePosition = {};
+            this.mouseVelocity = {};
+            console.log(this.prevMousePosition);
+
+            /** Eventlistener **/
+            $(window).bind("mousemove", bind(this.mouseMove, this));
+
         },
 
         start:function(){
@@ -90,6 +98,7 @@ define([
                     break;
                 case "third":
                     this.eyeObject.update(dt, this.cases[this.count]);
+                    this.text.updateThird(dt);
                     break;
             }
 
@@ -133,8 +142,32 @@ define([
             this.canvas.height = this.height;
         },
 
-        mouseMove: function(pos){
+        mouseMove: function(event){
+            console.log(this.prevMousePosition);
+            if (isNaN(this.prevMousePosition.x) || isNaN(this.prevMousePosition.y)) {
+                this.prevMousePosition.x = event.pageX;
+                this.prevMousePosition.y = event.pageY;
 
+                return;
+            }
+
+            this.curMousePostion.x = event.pageX;
+            this.curMousePostion.y = event.pageY;
+
+            this.mouseVelocity.x = this.curMousePostion.x - this.prevMousePosition.x;
+            this.mouseVelocity.y = this.curMousePostion.y - this.prevMousePosition.y;
+
+            switch(this.cases[this.count]){
+                case "first":
+                    break;
+                case "second":
+                    this.eyeObject.mousemove(this.curMousePostion);
+                    break;
+                case "third":
+                    this.eyeObject.mousemove(this.curMousePostion);
+
+                    break;
+            }
         },
 
         hojoSen2: function(){
@@ -170,6 +203,7 @@ define([
             this.context.closePath();
 
         },
+
 
     });
 

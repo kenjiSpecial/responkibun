@@ -20,12 +20,6 @@ define([
         this.object = {};
         this.TRANSFORMSECONDTOTHIRD = 'transformSecondToThird';
         _.extend(this.object, Backbone.Events);
-
-        $(window).bind("mousemove", bind(this.mousemove, this));
-
-        /** mouse postion **/
-        this.curMousePostion = {};
-        this.prevMousePosition = {};
     }
 
     var maxRad = 6;
@@ -69,6 +63,7 @@ define([
     };
 
     Eye.prototype.SecondRender = function () {
+        this.context.lineWidth = 3;
 
         this.context.beginPath();
         this.context.strokeStyle = "#000";
@@ -99,25 +94,27 @@ define([
     Eye.prototype.ThirdURender = function () {
 
         this.context.strokeStyle = "#000";
-        this.context.moveTo()
-
 
         if (this.blinkStatus) {
+            this.context.lineWidth = 3;
+
             this.context.beginPath();
             this.context.fillStyle = "#fff";
             this.context.strokeStyle = "#000";
             this.context.arc(this.pt1.x, this.pt1.y, 13, 0, 2 * Math.PI, false);
-            this.context.stroke();
             this.context.fill();
+            this.context.stroke();
             this.context.closePath();
 
             this.context.beginPath();
             this.context.strokeStyle = "#000";
             this.context.fillStyle = "#fff";
             this.context.arc(this.pt2.x, this.pt2.y, 13, 0, 2 * Math.PI, false);
-            this.context.stroke();
             this.context.fill();
+            this.context.stroke();
             this.context.closePath();
+
+            this.context.lineWidth = 2;
 
             this.context.beginPath();
             this.context.strokeStyle = "#000";
@@ -134,20 +131,22 @@ define([
             this.context.closePath();
 
         } else {
+            this.context.lineWidth = 3;
+
             this.context.beginPath();
             this.context.strokeStyle = "#000";
             this.context.fillStyle = "#fff";
             this.context.arc(this.pt1.x, this.pt1.y, 13, 0, 2 * Math.PI, false);
-            this.context.stroke();
             this.context.fill();
+            this.context.stroke();
             this.context.closePath();
 
             this.context.beginPath();
             this.context.strokeStyle = "#000";
             this.context.fillStyle = "#fff";
             this.context.arc(this.pt2.x, this.pt2.y, 13, 0, 2 * Math.PI, false);
-            this.context.stroke();
             this.context.fill();
+            this.context.stroke();
             this.context.closePath();
 
             this.context.beginPath();
@@ -163,32 +162,17 @@ define([
             this.context.closePath();
         }
 
-
     };
 
-    Eye.prototype.mousemove = function (event) {
-        if (isNaN(this.prevMousePosition)) {
-            this.prevMousePosition.x = event.pageX;
-            this.prevMousePosition.y = event.pageY;
+    Eye.prototype.mousemove = function (pos) {
 
-            return;
-        }
-
-        this.curMousePostion.x = event.pageX;
-        this.curMousePostion.y = event.pageY;
-
-        this.mouseVelocity.x = this.curMousePostion.x - this.prevMousePosition.x;
-        this.mouseVelocity.y = this.curMousePostion.y - this.prevMousePosition.y;
-
-        var dx = event.pageX - this.pt1.x;
-        var dy = event.pageY - this.pt1.y;
+        var dx = pos.x - this.pt1.x;
+        var dy = pos.y - this.pt1.y;
 
         this.theta = Math.atan2(dy, dx);
 
 
-
-
-    }
+    };
 
     return Eye
 });
